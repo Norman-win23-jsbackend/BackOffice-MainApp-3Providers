@@ -1,0 +1,45 @@
+﻿@page "/Messages"
+@using Norman.Common.Services
+@inject ApplicationDbContext dbContext
+<form method="post" asp-controller="Account" asp-action="UpdateDetailsInfo" enctype="multipart/form-data">
+    <section id="account-details">
+        <div class="container mt-5">
+            <div class="main-info">
+                <div class="images">
+                    @if (user != null)
+                    {
+                        var imagePath = !string.IsNullOrEmpty(@user.ProfilePicture) ? user.ProfilePicture : "~/Images/ProfileImage/default-profile-image.jpg";
+                        <img id="profileImg" class="profile-img" src="@imagePath" style="max-width: 130px; border-radius: 50%; overflow: hidden;" alt="@($"{@user.FirstName} {user.LastName}")" />
+                    }
+                    <img class="refresh-icon" src="~/images/icons/refresh-icon.svg" alt="Upload Photo" id="uploadImage" style="cursor: pointer;">
+                    <input id="fileInput" asp-for="ProfileImage" type="file" class="form-control" style="display: none;">
+                    <img id="myImg" style="max-width: 130px; border-radius: 50%; overflow: hidden;" />
+                </div>
+                <h5>@user.FirstName @user.LastName</h5>
+                <p>@user.Email</p>
+                <div class="buttons">
+                    <span class="btn btn-theme"><i class="fa-light fa-gear"></i>Security </span>
+                    <a class="btn-gray" asp-controller="Auth" asp-action="SignOut"><i class="fa-regular fa-user"></i><span>Sign out</span></a>
+                </div>
+            </div>
+            <div class="row g-3 justify-content-md-center">
+                <h2>Messages</h2>
+            </div>
+
+        </div>
+    </section>
+</form>
+
+@code {
+    private ApplicationUser user { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+
+    private async Task LoadData()
+    {
+        user = await dbContext.Users.FindAsync();
+    }
+}

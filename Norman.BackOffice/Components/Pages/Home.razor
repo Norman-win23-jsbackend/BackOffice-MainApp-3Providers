@@ -1,0 +1,126 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Norman.Common.Services.Models
+@inject ApplicationDbContext dbcontext
+<PageTitle>Courses</PageTitle>
+<section class="courses">
+    <div class="container">
+        <div class="courses-bread">
+            <a href="/"><i class="fa-regular fa-house me-2"></i>Home</a>
+            <i class="fa-regular fa-angles-right"></i>
+            <a>Courses</a>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+            <a class="btn-theme-s" href="addCourse"><i class="bi bi-plus-square"></i>Add Course</a>
+        </div>
+        <div class="courses-options">
+            <h1 class="pb-3">Courses</h1>
+            <div class="forms">
+                <select class="form-select">
+                    <option selected value="">All categories</option>
+                   
+                </select>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search courses"
+                           aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="@LoadCourses()">
+                        <i class="fa-regular fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Title</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var course in courses)
+                {
+                    <tr>
+                        <td>@course.Title</td>
+                        <td>@course.Category.Name</td>
+                        <td>@course.Author</td>
+                        <td>@course.Author</td>
+                        <td>
+                            <a class="btn btn-outline-primary" href="addCourse/@course.Id">edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+@code {
+    private List<Courses> courses = new List<Courses>();
+    private string Search;
+    private bool List = true;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCourses();
+    }
+
+    private async Task LoadCourses()
+    {
+        // using HttpResponseMessage response = await Http.GetAsync(AzureFunction.EmailProvider + "/CoursesList");
+        // response.EnsureSuccessStatusCode();
+        // string content = await response.Content.ReadAsStringAsync();
+        // courses = JsonConvert.DeserializeObject<List<Courses>>(content);
+        #region Test Data
+        for (int i = 0; i < 10; i++)
+        {
+            Norman.Common.Services.Models.Courses course = new Norman.Common.Services.Models.Courses
+                {
+                    Id = Guid.NewGuid(),
+                    Title = $"Course {i + 1}",
+                    CourseImagePath = $"fullstack_web_dev.svg",
+                    Category = new Categories { Id = Guid.NewGuid(), Name = $"Category {i + 1}" }, // assume Categories is an enum
+                    CategoryId = Guid.NewGuid(),
+                    IsBestseller = i % 2 == 0,
+                    Hours = 10,
+                    OriginalPrice = 100.00m,
+                    DiscountPrice = 80.00m,
+                    LikesInProcent = 0.8m,
+                    LikesInNumbers = 400,
+                    TitleDescription = $"This is course {i + 1}",
+                    Author = $"Author {i + 1}",
+                    AuthorImagePath = $"author{i + 1}.jpg",
+                    AuthorDescription = $"This is author {i + 1}",
+                    CourseDescription = $"This is course {i + 1} description",
+                    CourseGoal1 = $"Goal 1 of course {i + 1}",
+                    CourseGoal2 = $"Goal 2 of course {i + 1}",
+                    CourseGoal3 = $"Goal 3 of course {i + 1}",
+                    CourseGoal4 = $"Goal 4 of course {i + 1}",
+                    CourseGoal5 = $"Goal 5 of course {i + 1}",
+                    CourseIncludes1 = $"Includes 1 of course {i + 1}",
+                    CourseIncludes2 = $"Includes 2 of course {i + 1}",
+                    CourseIncludes3 = $"Includes 3 of course {i + 1}",
+                    CourseIncludes4 = $"Includes 4 of course {i + 1}",
+                    CourseIncludes5 = $"Includes 5 of course {i + 1}",
+                    ProgramDetailTitle1 = $"Program detail title 1 of course {i + 1}",
+                    ProgramDetailDescription1 = $"Program detail description 1 of course {i + 1}",
+                    ProgramDetailTitle2 = $"Program detail title 2 of course {i + 1}",
+                    ProgramDetailDescription2 = $"Program detail description 2 of course {i + 1}",
+                    ProgramDetailTitle3 = $"Program detail title 3 of course {i + 1}",
+                    ProgramDetailDescription3 = $"Program detail description 3 of course {i + 1}",
+                    ProgramDetailTitle4 = $"Program detail title 4 of course {i + 1}",
+                    ProgramDetailDescription4 = $"Program detail description 4 of course {i + 1}",
+                    ProgramDetailTitle5 = $"Program detail title 5 of course {i + 1}",
+                    ProgramDetailDescription5 = $"Program detail description 5 of course {i + 1}",
+                    ProgramDetailTitle6 = $"Program detail title 6 of course {i + 1}",
+                    ProgramDetailDescription6 = $"Program detail description 6 of course {i + 1}",
+                };
+            courses.Add(course);
+        }
+        #endregion
+    }
+
+}

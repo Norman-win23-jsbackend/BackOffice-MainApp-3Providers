@@ -1,0 +1,14 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      },
+      "enableLiveMetricsFilters": true
+    }
+  },
+  "Connection": "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Nour\\Education\\Test\\JavaScriptBackEnd\\HomeWork\\Nour-main\\Norman.App\\Data\\SDataBase.mdf;Integrated Security=True;Connect Timeout=30"
+
+}

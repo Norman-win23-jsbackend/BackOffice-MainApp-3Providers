@@ -1,0 +1,84 @@
+@import '../core/_colors.scss';
+@import '../core/_typography.scss';
+
+
+
+#signup {
+    height: 100%;
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    form {
+        padding: 0 15px;
+        width: 100%;
+
+        @include md {
+            padding: 0;
+        }
+
+        @include lg {
+            width: 50%;
+        }
+
+        .content {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr;
+            grid-template-areas: "firstname" "lastname" "email " "password" "confirm" "terms";
+
+            @include md {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas: "firstname lastname" "email email" "password password" "confirm confirm" "terms terms";
+            }
+
+            #form-firstname {
+                grid-area: firstname;
+            }
+
+            #form-lastname {
+                grid-area: lastname;
+            }
+
+            #form-email {
+                grid-area: email;
+            }
+
+            #form-password {
+                grid-area: password;
+            }
+
+            #form-confirm {
+                grid-area: confirm;
+            }
+
+            #form-terms {
+                grid-area: terms;
+            }
+        }
+
+
+        span[asp-validation-for="Form.FirstName"] {
+            color: aqua;
+        }
+        // Target validation error spans
+        span.field-validation-error {
+            @include text-s;
+            /*  color: $danger;*/
+            color: aqua;
+
+            &::after {
+                position: absolute;
+                right: 10px;
+                top: calc(100% + 2px); /* Adjust position */
+                font-size: 1.5em; /* Adjust font size */
+                display: inline-block;
+                content: '\2BBF'; /* Unicode chevron right symbol */
+            }
+        }
+    }
+}

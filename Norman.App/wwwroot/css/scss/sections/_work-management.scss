@@ -1,0 +1,44 @@
+@import '../core/_colors.scss';
+@import '../core/_typography.scss';
+
+
+#work-management {
+
+    .container {
+
+        @include lg {
+            display: flex;
+            // flex-direction: row;
+
+        }
+
+        .work-img {
+            max-width: 100%;
+        }
+
+        .content {
+
+            @include lg {
+                margin-top: 125px;
+                margin-left: 100px;
+            }
+
+            .check-box {
+                display: flex;
+                align-items: center;
+
+                img {
+                    margin-bottom: 16px;
+                }
+
+                p {
+                    padding-left: 20px;
+                }
+            }
+            .btn-theme-s {
+                width: 200px;
+            }
+
+        }
+    }
+}

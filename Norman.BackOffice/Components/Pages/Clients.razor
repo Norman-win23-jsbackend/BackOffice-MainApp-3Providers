@@ -1,0 +1,67 @@
+﻿@page "/clients"
+@* @attribute [Authorize] *@
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Norman.Common.Services.Models
+@inject ApplicationDbContext dbcontext
+@inject AuthenticationStateProvider AuthStateProvider
+<PageTitle>Clients</PageTitle>
+@* @AuthStateProvider.GetAuthenticationStateAsync().Result?.User?.Identity?.Name! *@
+<section class="courses">
+    <div class="container">
+        <div class="courses-bread">
+            <a href="/"><i class="fa-regular fa-house me-2"></i>Home</a>
+            <i class="fa-regular fa-angles-right"></i>
+            <a>Clients</a>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+        </div>
+        <div class="courses-options">
+            <h1 class="pb-3">Clients</h1>
+        </div>
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>AddressLine</th>
+                    <th>PhoneNumber</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var course in users)
+                {
+                    <tr>
+                        <td>@course.Email</td>
+                        <td>@course.AddressLine_1</td>
+                        <td>@course.PhoneNumber</td>
+                        <td>
+                            <a class="btn btn-outline-primary" href="addCourse/@course.Id">edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+@code {
+    private List<ApplicationUser> users { get; set; } = new List<ApplicationUser>();
+    private Courses course = new Courses();
+    private string Search;
+    private string CategoryId;
+    private bool List = true;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        var role = await dbcontext.Roles.FirstOrDefaultAsync(e => e.Name == "User");
+        var usersList = await dbcontext.UserRoles.Where(e => e.RoleId == role.Id).Select(e => e.UserId).ToListAsync();
+        users = await dbcontext.Users.Where(e => usersList.Contains(e.Id)).ToListAsync();
+    }
+
+}

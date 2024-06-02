@@ -1,0 +1,15 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      },
+      "enableLiveMetricsFilters": true
+    }
+  },
+  "CosmosDbConnectionString": "Data Source=localhost;Initial Catalog=Nour;Integrated Security=True;TrustServerCertificate=True;",
+  "CosmosDbName": "",
+  "CosmosContainerCourses": ""
+}

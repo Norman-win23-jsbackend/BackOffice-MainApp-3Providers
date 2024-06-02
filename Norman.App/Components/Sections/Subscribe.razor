@@ -1,0 +1,99 @@
+﻿<section id="subscribe">
+    <div class="container">
+        <h1>Don´t Want To Miss Anything?</h1>
+        <img src="images/icons/curly-arrows.svg" alt="">
+
+        <EditForm Model="@subscribeModel" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="grid-box">
+                <h5>Sign up for Newsletters</h5>
+
+                <label>
+                    <InputCheckbox id="DailyNewsletter" @bind-Value="subscribeModel.DailyNewsletter" />
+                    <label>Daily Newsletter</label>
+                </label>
+                <label>
+                    <InputCheckbox id="AdvertisingUpdates" @bind-Value="subscribeModel.AdvertisingUpdates" />
+                    <label> Advertising Updates</label>
+                </label>
+                <label>
+                    <InputCheckbox id="WeekinReview" @bind-Value="subscribeModel.WeekinReview" />
+                    <label> Week in Review</label>
+                </label>
+
+                <label>
+                    <InputCheckbox id="EventUpdates" @bind-Value="subscribeModel.EventUpdates" />
+                    <label> Event Updates</label>
+                </label>
+                <label>
+                    <InputCheckbox id="StartupsWeekly" @bind-Value="subscribeModel.StartupsWeekly" />
+                    <label> Startups Weekly</label>
+                </label>
+                <label>
+                    <InputCheckbox id="Podcasts" @bind-Value="subscribeModel.Podcasts" />
+                    <label>Podcasts</label>
+                </label>
+
+            </div>
+            <div class="subscribe-here" id="form-email">
+                <InputText id="Email" @bind-Value="subscribeModel.Email" class="form-control" />
+                <button class="btn-theme" type="submit">Subscribe *</button>
+            </div>
+
+
+            <div class="terms">
+
+                <label for=""><input type="checkbox" name="terms" required> *Yes, I agree to the <a href="terms-and-privacy.html">terms and privacy policy.</a></label>
+            </div>
+
+        </EditForm>
+        <span class="information  text-center  ">
+
+            @if (status == "Success")
+            {
+                <span class="alert alert-success">You have been subscribed</span>
+            }
+            else if (status == "AlreadyExists")
+            {
+                <span class="alert alert-warning">You have already subscribed</span>
+            }
+            else if (status == "Invalid")
+            {
+                <span class="alert alert-danger">You must enter a valid email address</span>
+            }
+            else if (status == "ConnectionFailed")
+            {
+                <span class="alert alert-danger">Unable to contact the server. Please try again later.</span>
+            }
+
+        </span>
+    </div>
+</section>
+@code {
+    SubscribeModel subscribeModel = new SubscribeModel();
+    string status = "";
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            status = "Success";
+            // var content = new StringContent(JsonConvert.SerializeObject(viewModel), Encoding.UTF8, "application/json");
+            // var response = await _http.PostAsync("https://localhost:7239/api/Subscribers", content);
+
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     status = "Success";
+            // }
+            // else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+            // {
+            //     status = "AlreadyExists";
+            // }
+        }
+        catch
+        {
+            status = "ConnectionFailed";
+        }
+    }
+}

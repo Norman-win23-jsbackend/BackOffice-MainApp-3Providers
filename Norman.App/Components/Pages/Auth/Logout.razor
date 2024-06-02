@@ -1,0 +1,25 @@
+﻿@page "/logout"
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Authentication
+@inject NavigationManager navigationManager
+
+<PageTitle>Logout</PageTitle>
+
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            await HttpContext.SignOutAsync();
+            navigationManager.NavigateTo("/logout", true);
+        }
+    }
+}

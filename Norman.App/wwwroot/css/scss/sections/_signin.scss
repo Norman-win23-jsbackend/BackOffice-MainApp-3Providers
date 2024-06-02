@@ -1,0 +1,72 @@
+@import '../core/_colors.scss';
+@import '../core/_typography.scss';
+
+
+
+/*#signin {
+    height: 100%;
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    form {
+        padding: 0 15px;
+        width: 100%;
+
+        @include md {
+            padding: 0;
+        }
+
+        @include lg {
+            width: 45%;
+        }
+
+        .content {
+            display: grid;
+            gap: 20px;
+        }
+
+        .forgot {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .external-auth {
+            text-align: center;
+
+            p {
+                font-weight: 700;
+            }
+
+            .social-auth {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+
+                button {
+                    flex: 1;
+                }
+            }
+        }
+    }
+    // Target validation error spans
+    span.field-validation-error {
+        @include text-s;
+        color: $danger;
+
+        &::after {
+            position: absolute;
+            right: 10px;
+            top: calc(100% + 2px);*/ /* Adjust position */
+            /*font-size: 1.5em;*/ /* Adjust font size */
+            /*display: inline-block;
+            content: '\2BBF';*/ /* Unicode chevron right symbol */
+        /*}
+    }
+}*/

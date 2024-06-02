@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+
+@inherits LayoutComponentBase
+@inject ApplicationDbContext dbContext
+<div class="wrapper">
+    <header>
+        <div class="container">
+            <a id="logo"><img src="/images/silicon-logo-light_theme.svg" alt=""></a>
+            <NavMenu></NavMenu>
+            <div class="btn-switch">
+                <label>Light</label>
+                <label class="switch" for="switch-mode">
+                    <input type="checkbox" id="switch-mode" />
+                    <span class="slider round"></span>
+                </label>
+                <label>Dark</label>
+            </div>
+            <div class="account-buttons">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <a class="btn-gray" href="signIn"><i class="fa-regular fa-right-to-bracket"></i> <span>Sign In</span></a>
+                        <a class="btn-theme" href="signUp"><i class="fa-regular fa-user"></i><span>Sign Up</span></a>
+                    </NotAuthorized>
+                    <Authorized>
+                        <a href="Profile">
+                            <div style="max-width: 50px; border-radius: 50%; overflow: hidden;">
+                                <img style="width: 100%; height: auto;" src="@imagePath" alt="Account Details">
+                            </div>
+                        </a>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </header>
+    <main>
+        @Body
+    </main>
+    <footer>
+        <div class="container">
+            <div class="social-media">
+                <a class="btn-social" href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a class="btn-social" href="#"><i class="fa-brands fa-square-x-twitter"></i></a>
+                <a class="btn-social" href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a class="btn-social" href="#"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+            <p>
+                <strong>&copy; @DateTime.Now.Year Silicon. All rights reserved.</strong>
+                Pulvinar urna condimentum amet tempor, ornare integer. Lorem odio justo malesuada suspendisse viverra aliquet quisque turpis non. Feugiat in odio non nunc ornare consectetur.
+            </p>
+        </div>
+    </footer>
+</div>
+@code {
+    [CascadingParameter]
+    Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+    private string imagePath = "/Images/ProfileImage/";
+    private string userName;
+    private ApplicationUser User;
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            var authenticationState = await authenticationStateTask;
+            userName = authenticationState.User.Identity.Name;
+            User = await dbContext.Users.FirstOrDefaultAsync(e => e.UserName == userName);
+            imagePath = imagePath + User.ProfilePicture;
+        }
+    }
+}

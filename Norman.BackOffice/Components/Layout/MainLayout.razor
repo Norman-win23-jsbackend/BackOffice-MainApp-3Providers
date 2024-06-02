@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+
+<div class="wrapper">
+    <header>
+        <div class="container">
+            <a id="logo"><img src="/images/silicon-logo-light_theme.svg" alt=""></a>
+            <NavMenu></NavMenu>
+        </div>
+    </header>
+    <main>
+        @Body
+    </main>
+    <footer>
+        <div class="container">
+            <p>
+                <strong>&copy; @DateTime.Now.Year Nour. All rights reserved.</strong>
+                Pulvinar urna condimentum amet tempor, ornare integer. 
+            </p>
+        </div>
+    </footer>
+</div>

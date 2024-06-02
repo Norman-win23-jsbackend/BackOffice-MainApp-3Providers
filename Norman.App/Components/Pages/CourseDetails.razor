@@ -1,0 +1,248 @@
+﻿@page "/courseDetails/{Id}"
+
+@using Microsoft.EntityFrameworkCore
+@using Newtonsoft.Json
+@inject HttpClient Http
+@using Norman.App
+@using System.Text.Json
+
+<section id="courses-details">
+    @if (course != null)
+    {
+        <div class="overlay">
+            <img class="header-img-background" src="/Images/Courses/@course.ImgUrl" alt="Course Image">
+        </div>
+
+        <div class="container">
+            <header>
+                <nav class="breadcrumb">
+                    <a href="/"><i class="fa-sharp fa-regular fa-house"></i> Home</a>
+                    <i class="fa-light fa-angles-right"></i>
+                    <a class="active" href="#">Courses</a>
+                    <i class="fa-light fa-angles-right"></i>
+                    <a class="active" href="#">@course.Title</a>
+                </nav>
+                <div class="button-group">
+                    <button class="best-seller">Best seller</button>
+                    <button class="digital">Digital</button>
+                </div>
+                <h1>@course.Title</h1>
+                <p>@course.Title</p>
+
+                <div class="duration-rating">
+                    <div class="stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-regular fa-star not-active"></i>
+                    </div>
+                    <p>reviews</p>
+                    <span> | </span>
+
+                    <p><i class="fa-sharp fa-light fa-thumbs-up"></i>@course.Likes</p>
+                    <span> | </span>
+
+                    <div class="duration"><i class="fa-regular fa-clock"></i>@course.Hours</div>
+                </div>
+
+                <div class="author-container">
+                    <img style="max-width: 50px; border-radius: 50%;" src="/images/Courses/@course.AuthorImageUrl" />
+
+                    <div class="author">
+                        <h6>Created by</h6>
+                        <p>@course.AuthorName</p>
+                    </div>
+                </div>
+            </header>
+            <div class="content">
+                <div class="description">
+                    <h2>Course Description</h2>
+                    <p>@course.CourseDescription</p>
+                    <h4>What you'll learn</h4>
+                    <div class="list">
+                        <p><i class="fa-regular fa-circle-check"></i>@course.CourseGoal1</p>
+                        <p><i class="fa-regular fa-circle-check"></i>@course.CourseGoal2</p>
+                        <p><i class="fa-regular fa-circle-check"></i>@course.CourseGoal3</p>
+                        <p><i class="fa-regular fa-circle-check"></i>@course.CourseGoal4</p>
+                        <p><i class="fa-regular fa-circle-check"></i>@course.CourseGoal5</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>This course includes:</h4>
+                    <p><i class="fa-solid fa-display"></i>@course.CourseIncludes1</p>
+                    <p><i class="fa-regular fa-file-lines"></i>@course.CourseIncludes2</p>
+                    <p><i class="fa-regular fa-down-to-bracket"></i>@course.CourseIncludes3</p>
+                    <p><i class="fa-regular fa-infinity"></i>@course.CourseIncludes4</p>
+                    <p><i class="fa-regular fa-trophy"></i>@course.CourseIncludes5</p>
+                    <h3>
+                        $@course.Discount <span>$@course.Price</span>
+                    </h3>
+                    <form method="post">
+                        <input type="hidden" value="courseId" />
+                        <button type="submit" class="btn-theme-s">Join course</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="program-detail">
+                <h2>Program Details</h2>
+                <div class="step-container">
+                    <div class="step">
+                        <div class="number">
+                            <h2>1</h2>
+                        </div>
+                        <div class="text">
+                            <h3>@course.ProgramDetailTitle1</h3>
+                            <p>@course.ProgramDetailDescription1</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="number">
+                            <h2>2</h2>
+                        </div>
+                        <div class="text">
+                            <h3>@course.ProgramDetailTitle2</h3>
+                            <p>@course.ProgramDetailDescription2</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="number">
+                            <h2>3</h2>
+                        </div>
+                        <div class="text">
+                            <h3>@course.ProgramDetailTitle3</h3>
+                            <p>@course.ProgramDetailDescription3</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="number">
+                            <h2>4</h2>
+                        </div>
+                        <div class="text">
+                            <h3>@course.ProgramDetailTitle4</h3>
+                            <p>@course.ProgramDetailDescription4</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="number">
+                            <h2>5</h2>
+                        </div>
+                        <div class="text">
+                            <h3>@course.ProgramDetailTitle5</h3>
+                            <p>@course.ProgramDetailDescription5</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="number">
+                            <h2>6</h2>
+                        </div>
+                        <div class="text">
+                            <h3>@course.ProgramDetailTitle6</h3>
+                            <p>@course.ProgramDetailDescription6</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="author-info">
+                <img style="max-width: 470px; height: auto;" src="/images/Courses/@course.AuthorImageUrl" />
+
+                <div class="text-block">
+                    <p>Learn from the best</p>
+                    <h1>@course.AuthorName</h1>
+                    <p>@course.AuthorDescription</p>
+                    <div class="buttons">
+                        <a class="btn-red"><i class="fa-brands fa-youtube"></i>1.5k subscribers</a>
+                        <a class="btn-gray"><i class="fa-brands fa-square-facebook"></i>2.3k followers</a>
+                    </div>
+                    <img class="decor" src="/images/Courses/pattern.svg" />
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Loading course details...</p>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private CourseModel? course;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GraphQLQuery
+            {
+                Query = $"{{ getCoursesById(id: \"{Id}\") {{ id title ingress isDigital reviews isBestseller imageHeaderUri imgUrl starRating likes hours likePercentage authorImageUrl authorDescription followers subscribers price discount description learning includes programDetails }} }}"
+            };
+
+        var response = await Http.PostAsJsonAsync("https://courseprovider-nor.azurewebsites.net/api/graphql", query);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Response Data: {responseData}");
+            var result = JsonConvert.DeserializeObject<DynamicGraphQLResponse>(responseData);
+
+            if (result?.Data != null && result.Data.TryGetProperty("getCoursesById", out JsonElement courseData))
+            {
+                course = new CourseModel
+                    {
+                        Title = courseData.GetProperty("title").GetString() ?? string.Empty,
+                        Ingress = courseData.GetProperty("ingress").GetString() ?? string.Empty,
+                        IsBestseller = courseData.GetProperty("isBestseller").GetBoolean(),
+                        IsDigital = courseData.GetProperty("isDigital").GetBoolean(),
+                        ImgHeaderUrl = courseData.GetProperty("imageHeaderUri").GetString() ?? string.Empty,
+                        Reviews = courseData.GetProperty("reviews").GetString() ?? string.Empty,
+                        Hours = courseData.GetProperty("hours").GetString() ?? string.Empty,
+                        Likes = courseData.GetProperty("likes").GetString() ?? string.Empty,
+                        Price = courseData.GetProperty("price").GetString() ?? string.Empty,
+                        Discount = courseData.GetProperty("discount").GetString() ?? string.Empty,
+                        StarRating = courseData.GetProperty("starRating").GetDouble(),
+                        CourseDescription = courseData.GetProperty("description").GetString() ?? string.Empty,
+                        CourseGoal1 = courseData.GetProperty("learning").EnumerateArray().ElementAtOrDefault(0).GetString(),
+                        CourseGoal2 = courseData.GetProperty("learning").EnumerateArray().ElementAtOrDefault(1).GetString(),
+                        CourseGoal3 = courseData.GetProperty("learning").EnumerateArray().ElementAtOrDefault(2).GetString(),
+                        CourseGoal4 = courseData.GetProperty("learning").EnumerateArray().ElementAtOrDefault(3).GetString(),
+                        CourseGoal5 = courseData.GetProperty("learning").EnumerateArray().ElementAtOrDefault(4).GetString(),
+                        CourseIncludes1 = courseData.GetProperty("includes").EnumerateArray().ElementAtOrDefault(0).GetString(),
+                        CourseIncludes2 = courseData.GetProperty("includes").EnumerateArray().ElementAtOrDefault(1).GetString(),
+                        CourseIncludes3 = courseData.GetProperty("includes").EnumerateArray().ElementAtOrDefault(2).GetString(),
+                        CourseIncludes4 = courseData.GetProperty("includes").EnumerateArray().ElementAtOrDefault(3).GetString(),
+                        CourseIncludes5 = courseData.GetProperty("includes").EnumerateArray().ElementAtOrDefault(4).GetString(),
+                        ProgramDetailTitle1 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(0).GetProperty("title").GetString(),
+                        ProgramDetailDescription1 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(0).GetProperty("description").GetString(),
+                        ProgramDetailTitle2 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(1).GetProperty("title").GetString(),
+                        ProgramDetailDescription2 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(1).GetProperty("description").GetString(),
+                        ProgramDetailTitle3 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(2).GetProperty("title").GetString(),
+                        ProgramDetailDescription3 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(2).GetProperty("description").GetString(),
+                        ProgramDetailTitle4 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(3).GetProperty("title").GetString(),
+                        ProgramDetailDescription4 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(3).GetProperty("description").GetString(),
+                        ProgramDetailTitle5 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(4).GetProperty("title").GetString(),
+                        ProgramDetailDescription5 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(4).GetProperty("description").GetString(),
+                        ProgramDetailTitle6 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(5).GetProperty("title").GetString(),
+                        ProgramDetailDescription6 = courseData.GetProperty("programDetails").EnumerateArray().ElementAtOrDefault(5).GetProperty("description").GetString(),
+                        AuthorName = courseData.GetProperty("authorName").GetString(),
+                        AuthorImageUrl = courseData.GetProperty("authorImageUrl").GetString(),
+                        AuthorDescription = courseData.GetProperty("authorDescription").GetString(),
+                        Followers = courseData.GetProperty("followers").GetInt32(),
+                        Subscribers = courseData.GetProperty("subscribers").GetInt32(),
+                    };
+            }
+        }
+        else
+        {
+            var errorData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Failed to load course details. Status Code: {response.StatusCode}, Error: {errorData}");
+        }
+    }
+}

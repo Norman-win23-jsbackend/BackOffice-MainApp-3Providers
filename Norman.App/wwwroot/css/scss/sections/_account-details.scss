@@ -1,0 +1,88 @@
+@import '../core/_colors.scss';
+@import '../core/_typography.scss';
+
+#account-details {
+    h5 {
+        color: $theme;
+    }
+
+    #uploadImage {
+        transition: transform 0.3s ease; 
+        transform-origin: center;
+
+        &:hover {
+            transform: rotate(45deg); 
+        }
+    }
+
+
+
+    .container {
+
+        @include lg {
+            display: flex;
+            gap: 10rem;
+        }
+
+        .main-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+
+            @include lg {
+                min-width: 200px;
+            }
+
+            .images {
+                position: relative;
+
+                .refresh-icon {
+                    position: absolute;
+                    top: 65%;
+                    left: 60%;
+                }
+
+                .profile-img {
+                    z-index: 1;
+                }
+
+                .refresh-icon {
+                    z-index: 2;
+                }
+            }
+
+            .buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                .btn {
+                    display: flex;
+                    justify-content: stretch;
+                }
+            }
+        }
+
+        form {
+
+            h5 {
+                color: blue;
+            }
+
+            .address::before {
+                content: '';
+                display: block;
+                height: 0.3px;
+                background-color: $gray-300;
+                margin-bottom: 40px;
+            }
+
+            .submit-buttons {
+                display: flex;
+                gap: 1rem;
+                margin: 2rem;
+            }
+        }
+    }
+}

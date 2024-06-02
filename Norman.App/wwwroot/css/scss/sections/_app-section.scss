@@ -1,0 +1,47 @@
+@import '../core/_colors.scss';
+@import '../core/_typography.scss';
+
+
+#app-section {
+    background-color: $gray-100;
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+
+    .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        @include lg {
+            justify-content: space-between;
+            margin-top: 60px;
+            margin-bottom: 60px;
+        }
+
+        .app-img {
+            max-width: 100%;
+        }
+
+        .app-content {
+            // padding-top: 60px;
+
+            .App-Pic {
+
+                &:hover {
+                    transition: all 0.15s ease-in-out;
+                    cursor: pointer;
+                    @include translate-m;
+                }
+            }
+
+
+            .grid-box {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                padding-top: 60px;
+            }
+        }
+    }
+}

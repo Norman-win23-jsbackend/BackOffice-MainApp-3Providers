@@ -1,0 +1,113 @@
+﻿@page "/addCourse"
+@using Microsoft.EntityFrameworkCore
+@using Norman.Common.Services.Models
+<PageTitle>Courses</PageTitle>
+<section class="courses">
+    <div class="container">
+        <div class="courses-bread">
+            <a href="/"><i class="fa-regular fa-house me-2"></i>Home</a>
+            <i class="fa-regular fa-angles-right"></i>
+            <a>Add Course</a>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+            <a class="btn-theme-s" href="courses"><i class="bi bi-plus-square"></i>Courses</a>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <span>Title :</span>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" name="@Course.Title" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span>Category :</span>
+                    <div class="input-group">
+                        <select class="form-select" name="@Course.CategoryId">
+                            <option selected value="">-- Select Categories --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <span>Hours :</span>
+                    <div class="input-group">
+                        <input type="number" value="" class="form-control" name="@Course.Hours" />
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <span>Course Description :</span>
+                    <div class="input-group">
+                        <textarea class="form-control" name="@Course.CourseDescription">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <hr />
+                </div>
+                <div class="col-md-6">
+                    <span>Author :</span>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" name="@Course.Author" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <span>Author Description :</span>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" name="@Course.AuthorDescription" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span>Original Price :</span>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" name="@Course.OriginalPrice" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span>Discount Price :</span>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" name="@Course.DiscountPrice" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <span>Likes In Procent :</span>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control" name="@Course.LikesInProcent" />
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <hr />
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" onclick="@Manage()" class="btn btn-outline-primary btn-group-lg">Submit</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-outline-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@code {
+    [Parameter]
+    public Guid ?Id { get; set; }
+    public Courses Course { get; set; } = new Courses();
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+   
+    private async Task Manage(Guid Id)
+    {
+        if (Course == null)
+        {
+            Course = new Courses()
+                {
+                    Id = Id
+                };
+        }
+    }
+    private async Task Manage()
+    {
+      
+    }
+}

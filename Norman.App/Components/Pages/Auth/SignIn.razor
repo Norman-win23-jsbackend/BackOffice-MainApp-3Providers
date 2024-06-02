@@ -1,0 +1,97 @@
+﻿@page "/signIn"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inject NavigationManager navigationManager
+
+<section class="sign-in">
+    <div class="container">
+        <EditForm class="row g-3 justify-content-md-center" Model="loginModel" OnSubmit="@Authenticate" FormName="LoginForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-md-8">
+                <h1>Welcome Back</h1>
+                <p>Don't have an account yet? <a href="SignUp">Sign up here.</a></p>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Email address</label>
+                <InputText @bind-Value="loginModel.Username" class="form-control" />
+                <ValidationMessage For="@(() => loginModel.Username)" />
+            </div>
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Password</label>
+                <InputText type="password" @bind-Value="loginModel.Password" class=" form-control" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
+            <div class="col-md-8">
+                <div class="form-check">
+                    <div id="Form-remember" class="col-md-8 checkbox">
+                        <div class="checkbox-group">
+                            <InputCheckbox @bind-Value="loginModel.RememberMe" />
+                            <label>Remember me</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <span class="text-danger">@errorMessage</span>
+            </div>
+            <div class="col-8 d-grid">
+                <button class="btn btn-theme-s" type="submit">Sign In</button>
+            </div>
+            <p class="fw-semibold text-center"><a href="Forgot">Forgot your password?</a></p>
+        </EditForm>
+    </div>
+</section>
+@code {
+    [CascadingParameter]
+    public HttpContext? httpContext { get; set; }
+
+    [SupplyParameterFromForm]
+    private SignInRequest loginModel { get; set; } = new SignInRequest();
+
+    private string? errorMessage;
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+    private async Task Authenticate()
+    {
+
+        try
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsJsonAsync(AzureFunction.AccountProvider + "/SignIn", loginModel);
+            if (response.IsSuccessStatusCode)
+            {
+                // Login successful, redirect to the home page
+                var responseBody = await response.Content.ReadFromJsonAsync<SignInResponse>();
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,responseBody.Username),
+                new Claim(ClaimTypes.Role,responseBody.Role),
+            };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                await httpContext.SignInAsync(principal);
+
+                navigationManager.NavigateTo("/");
+
+            }
+            else
+            {
+                // Login failed, display an error message
+                Console.WriteLine("Login failed");
+            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+}

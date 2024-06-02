@@ -1,0 +1,46 @@
+@import '../core/_colors.scss';
+@import '../core/_typography.scss';
+
+
+#work-tools {
+    margin-top:  80px;
+
+    .container {
+        
+        .section-title {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+
+            p {
+                padding-top: 10px;
+            }
+
+            @include lg {
+                padding-left: 200px;
+                padding-right: 200px;
+            }
+        }
+
+        .grid-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(4, 1fr);
+            padding-top: 60px;
+            gap: 2rem;
+
+            @include lg {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: 1fr 1fr;
+                padding-top: 60px;
+                gap: 5rem;
+            }
+
+
+            img {
+                padding-bottom: 20px;
+            }
+        }
+    }
+}

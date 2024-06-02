@@ -1,0 +1,153 @@
+﻿@page "/Security"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore
+@using Norman.BackOffice.Models
+@using Norman.Common.Services.Features
+@using Norman.Common.Services.Models
+@inject ApplicationDbContext dbContext
+@inject NavigationManager navigationManager
+
+<form method="post" asp-controller="Account" asp-action="UpdateDetailsInfo" enctype="multipart/form-data">
+    <section id="account-details">
+        <div class="container mt-5">
+            <div class="main-info">
+                <div class="images">
+                    @if (user != null)
+                    {
+                        var imagePath = !string.IsNullOrEmpty(@user.ProfilePicture) ? user.ProfilePicture : "~/Images/ProfileImage/default-profile-image.jpg";
+                        <img id="profileImg" class="profile-img" src="@imagePath" style="max-width: 130px; border-radius: 50%; overflow: hidden;" alt="@($"{@user.FirstName} {user.LastName}")" />
+                    }
+                    <img class="refresh-icon" src="~/images/icons/refresh-icon.svg" alt="Upload Photo" id="uploadImage" style="cursor: pointer;">
+                    <input id="fileInput" asp-for="ProfileImage" type="file" class="form-control" style="display: none;">
+                    <img id="myImg" style="max-width: 130px; border-radius: 50%; overflow: hidden;" />
+                </div>
+                <h5>@user.FirstName @user.LastName</h5>
+                <p>@user.Email</p>
+                <div class="buttons">
+                    <span class="btn btn-theme"><i class="fa-light fa-gear"></i>Security </span>
+                    <a class="btn-gray" asp-controller="Auth" asp-action="SignOut"><i class="fa-regular fa-user"></i><span>Sign out</span></a>
+                </div>
+            </div>
+            <div class="row g-3 justify-content-md-center">
+                <h2>Security</h2>
+                <h5>Password</h5>
+                <EditForm Model="@changePassword" FormName="changePassword" OnSubmit="ChangePassword">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label fw-semibold">Current Password</label>
+                        <InputText class="form-control" type="password" @bind-Value="changePassword.OldPassword" required />
+                        <ValidationMessage For="@(() => changePassword.OldPassword)" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label fw-semibold">New Password</label>
+                        <InputText class="form-control" type="password" @bind-Value="changePassword.NewPassword" required />
+                        <ValidationMessage For="@(() => changePassword.NewPassword)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label fw-semibold">Confirm Password</label>
+                        <InputText class="form-control" type="password" @bind-Value="changePassword.ConfirmPassword" required />
+                        <ValidationMessage For="@(() => changePassword.ConfirmPassword)" />
+                    </div>
+                    <div class="col-12 submit-buttons text-center">
+                        <div class="row">
+                            <div class="col">
+                                <button type="reset" class="btn btn-gray fw-semibold">Cancel</button>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-theme">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </EditForm>
+                <h5 class="address">Delete Account</h5>
+                <div class="col-md-12">
+                    <span>
+                        When you delete your account, your public profile will be deactivated immediately. If you change your mind before the 14 days are up, sign in with your email and password, and we’ll send you a link to reactivate your account.
+                    </span>
+                </div>
+                <div class="col-md-12">
+                    <InputCheckbox class="form-control" type="checkbox" @bind-Value="deleteAccount" />
+                    <span>
+                        Yes, I want to delete my account.
+                    </span>
+                </div>
+                <div class="col-12 submit-buttons text-center">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" onclick="DeleteAccount" class="btn btn-danger fw-semibold">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+@code {
+    private ApplicationUser user { get; set; }
+    private string userName;
+    private bool deleteAccount = false;
+    private string imagePath = "/Images/ProfileImage/";
+    private ChangePasswordRequest changePassword;
+    [CascadingParameter]
+    Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        if (HttpContext.User.Identity.IsAuthenticated)
+        {
+            var authenticationState = await authenticationStateTask;
+            userName = authenticationState.User.Identity.Name;
+            user = await dbContext.Users.FirstOrDefaultAsync(e => e.UserName == userName);
+            imagePath = imagePath + user.ProfilePicture;
+        }
+        user = await dbContext.Users.FindAsync();
+    }
+    private async Task ChangePassword()
+    {
+        var httpClient = new HttpClient();
+        var response = await httpClient.PostAsJsonAsync("https://example.com/api/login", changePassword);
+        if (response.IsSuccessStatusCode)
+        {
+            // Login successful, redirect to the home page
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // Login failed, display an error message
+            Console.WriteLine("Login failed");
+        }
+    }
+
+    private async Task DeleteAccount()
+    {
+       try
+        {
+            if (deleteAccount)
+            {
+                var httpClient = new HttpClient();
+                var response = await httpClient.PostAsJsonAsync(AzureFunction.AccountProvider + "/ChangePassword", changePassword);
+                if (response.IsSuccessStatusCode)
+                {
+                    navigationManager.NavigateTo("/");
+                }
+                else
+                {
+                    Console.WriteLine("Login failed");
+                }
+            }
+        }
+        catch (Exception)
+        {
+            
+            throw;
+        }
+    }
+
+
+}

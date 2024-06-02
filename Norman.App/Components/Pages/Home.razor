@@ -1,0 +1,42 @@
+﻿@inject HttpClient Http
+@page "/"
+
+
+<PageTitle>Nour App</PageTitle>
+
+<Showcase @rendermode="InteractiveAuto" />
+<Features @rendermode="InteractiveAuto" />
+<Lightanddark @rendermode="InteractiveAuto" />
+<WorkManagement @rendermode="InteractiveAuto" />
+<AppSection @rendermode="InteractiveAuto" />
+<WorkTools @rendermode="InteractiveAuto" />
+<Subscribe @rendermode="InteractiveAuto" />
+
+@code {
+    private string message;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // message = await CallSumAzureFunction();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+    private async Task<string> CallSumAzureFunction()
+    {
+        try
+        {
+            using HttpResponseMessage response = await Http.GetAsync(AzureFunction.EmailProvider + "/Sum?x=10&y=20");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex)
+        {
+            
+            throw;
+        }
+    }
+}

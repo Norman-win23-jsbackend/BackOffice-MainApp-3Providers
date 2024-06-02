@@ -1,0 +1,140 @@
+﻿@page "/courses"
+
+@using Microsoft.AspNetCore.Authorization
+@using Norman.App.Models
+@using System.Text.Json
+
+@inject HttpClient Http
+
+@* @attribute [Authorize] *@
+
+
+<PageTitle>Courses</PageTitle>
+
+<section class="courses">
+    <div class="container">
+        <div class="courses-bread">
+            <nav class="fa-regular fa-house me-2">
+                <a href="/"><i class="fa-regular fa-angles-right"></i>Home</a>
+                <p> >> </p>
+            </nav>
+        </div>
+
+        <div class="courses-options">
+            <h1 class="pb-3">Courses</h1>
+        </div>
+
+        <div class="forms">
+            <select class="form-select">
+                <option selected>All categories</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search courses"
+                       aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                    <i class="fa-regular fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="courses-grid grid-12">
+            @if (courses == null)
+            {
+                <div><i class="fa-sharp fa-solid fa-spinner-third fa-spin"></i></div>
+            }
+            else
+            {
+                @foreach (var item in courses)
+                {
+                    var link = $"courseDetails/{item.Id}";
+                    <div class="course-card">
+                        <button class="bookmark" onclick=""><i class="fa-regular fa-bookmark favorite"></i></button>
+                        <a href="@link" class="course">
+
+                            @if (item.IsBestseller)
+                            {
+                              <p class="best-seller text-s">Best Seller</p>
+                            }
+
+                            <img class="course-img" src="@item.ImgUrl" alt="" />
+                            <div class="content">
+                                <h2>@item.Title</h2>
+                                <p>By @item.AuthorName</p>
+                                <div class="course-prices">
+                                    @if (item.Discount != null)
+                                    {
+                                        <div class="text-lg text-danger">@item.Discount</div>
+                                    }
+                                    <div class="text-lg me-3 text-primary @(!string.IsNullOrEmpty(item.Discount) ? "discount-enabled" : "")">@item.Price</div>
+                                </div>
+
+                                <div class="card-info">
+                                    <div><i class="fa-regular fa-clock"></i> @item.Hours hours</div>
+                                    <div class="course-likes">
+                                        <div><i class="fa-regular fa-thumbs-up"> </i>@($"{item.LikePercentage}")</div>
+                                        <div>(@($"{item.Likes}"))</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<section class="work-with-us">
+    <div class="container grid-12">
+        <div class="content">
+            <p class="text-l">Ready to get started?</p>
+            <h1>Take Your <span class="skills">Skills</span> to the Next Level</h1>
+            <a class="btn-theme-s" href="#">Work with us</a>
+        </div>
+        <img src="images/illustration.svg" alt="">
+    </div>
+</section>
+
+
+
+@code {
+    private List<CourseModel>? courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GraphQLQuery { Query = "{getCourses {id isBestseller title authors {authorName} categories prices {price discount} hours likePercentage likes imgUrl}}" };
+        var response = await Http.PostAsJsonAsync("https://courseprovider-nor.azurewebsites.net/api/graphql?", query);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
+            if (result?.Data != null)
+            {
+                courses = result.Data.GetProperty("getCourses").EnumerateArray()
+                    .Select(course =>
+                    {
+                        var courseModel = new CourseModel
+                            {
+                                Id = course.GetProperty("id").GetString(),
+                                IsBestseller = course.GetProperty("isBestseller").GetBoolean(),
+                                ImgUrl = course.GetProperty("imgUrl").GetString(),
+                                Title = course.GetProperty("title").GetString(),
+                                Hours = course.GetProperty("hours").GetString(),
+                                Likes = course.GetProperty("likes").GetString(),
+                                LikePercentage = course.GetProperty("likePercentage").GetString(),
+                                AuthorName = course.TryGetProperty("authors", out var authorsArray) && authorsArray.GetArrayLength() > 0 ?
+                                        authorsArray[0].GetProperty("authorName").GetString() : null,
+                                Price = course.GetProperty("prices").GetProperty("price").GetDecimal().ToString(), // Parsing price as decimal
+                                Discount = course.GetProperty("prices").GetProperty("discount").GetDecimal().ToString(), // Parsing discount as decimal
+                            };
+                        return courseModel;
+                    })
+                    .ToList();
+            }
+        }
+    }
+}
+
